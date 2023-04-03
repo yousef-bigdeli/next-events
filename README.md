@@ -1,5 +1,5 @@
 # Next Events
-A Nextjs mini app to understand all types of routing and send URL parameters.
+A Nextjs mini app to understand all types of routing and basic concepts.
 
 This project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
