@@ -8,7 +8,7 @@ function EventDetailPage() {
   const router = useRouter();
   const event = getEventById(router.query.eventId);
 
-  if (!event) return <p>NO event found!</p>;
+  if (!event) return <p className="center">NO event found!</p>;
 
   return (
     <>
