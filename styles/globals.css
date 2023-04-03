@@ -33,6 +33,7 @@ ul {
 }
 
 .center {
-  margin: auto;
+  margin: 1rem auto;
   text-align: center;
+  font-size: 2rem;
 }
