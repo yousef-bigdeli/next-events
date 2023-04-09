@@ -8,6 +8,7 @@ import EventList from "@/components/events/event-list";
 import ResultsTitle from "@/components/events/results-title";
 import Button from "@/components/ui/button";
 import ErrorAlert from "@/components/ui/error-alert";
+import Head from "next/head";
 
 function FilteredEventsPage() {
   const [loadedEvents, setLoadedEvents] = useState();
@@ -33,11 +34,31 @@ function FilteredEventsPage() {
     if (data) setLoadedEvents(data);
   }, [data]);
 
-  if (!loadedEvents || isLoading) return <p className="center">Loading...</p>;
+  let pageHeadData = (
+    <Head>
+      <title>Filtered events</title>
+      <meta name="description" content="A list of filtered events." />
+    </Head>
+  );
+
+  if (!loadedEvents || isLoading)
+    return (
+      <>
+        {pageHeadData}
+        <p className="center">Loading...</p>
+      </>
+    );
 
   // get Filter data
   const year = +filterData[0];
   const month = +filterData[1];
+
+  pageHeadData = (
+    <Head>
+      <title>Filtered events</title>
+      <meta name="description" content={`All events for ${month}/${year}`} />
+    </Head>
+  );
 
   if (
     isNaN(year) ||
@@ -50,6 +71,7 @@ function FilteredEventsPage() {
   ) {
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>
           <p className="center">Invalid filter. Please adjust your values.</p>
         </ErrorAlert>
@@ -71,6 +93,7 @@ function FilteredEventsPage() {
   if (!filteredEvents || filteredEvents.length === 0)
     return (
       <>
+        {pageHeadData}
         <ErrorAlert>
           <p className="center">No events found for the chosen filter!</p>
         </ErrorAlert>
@@ -85,6 +108,7 @@ function FilteredEventsPage() {
 
   return (
     <div>
+      {pageHeadData}
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </div>
