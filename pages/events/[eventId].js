@@ -3,6 +3,7 @@ import EventSummary from "@/components/event-detail/event-summary";
 import EventContent from "@/components/event-detail/event-content";
 import { getEventById, getFeaturedEvents } from "@/helpers/api-utils";
 import Head from "next/head";
+import Comments from "@/components/input/comments";
 
 function EventDetailPage({ event }) {
   if (!event) return <p className="center">NO event found!</p>;
@@ -18,6 +19,7 @@ function EventDetailPage({ event }) {
       <EventContent>
         <p>{event.description}</p>
       </EventContent>
+      <Comments eventId={event.id} />
     </>
   );
 }
