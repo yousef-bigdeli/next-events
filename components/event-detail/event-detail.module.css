@@ -7,16 +7,23 @@
 
 .summary h1 {
   margin: 0;
-  padding-top: 4.8rem;
+  padding-top: 2rem;
   font-size: 3.2rem;
   text-align: center;
   text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
   color: white;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
+  .summary h1 {
+    font-size: 4.2rem;
+    padding-top: 2.8rem;
+  }
+}
+@media (min-width: 1400px) {
   .summary h1 {
     font-size: 8rem;
+    padding-top: 4.8rem;
   }
 }
 
