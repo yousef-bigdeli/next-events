@@ -9,7 +9,9 @@ const Comments = ({ eventId }) => {
 
   useEffect(() => {
     if (showComments) {
-      // TODO: Fetch all comments
+      fetch(`/api/comments/${eventId}`)
+        .then((res) => res.json())
+        .then((data) => setComments(data));
     }
   }, [showComments, eventId]);
 
@@ -18,7 +20,22 @@ const Comments = ({ eventId }) => {
   };
 
   const addCommentHandler = (commentData) => {
-    // TODO: Add new comment - POST
+    fetch(`/api/comments/${eventId}`, {
+      method: "POST",
+      body: JSON.stringify(commentData),
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then(({ message }) => {
+        // TODO: Show the message to the user
+        console.log(message);
+      })
+      .catch((err) => {
+        // TODO: handle error
+        console.log(err);
+      });
   };
 
   return (

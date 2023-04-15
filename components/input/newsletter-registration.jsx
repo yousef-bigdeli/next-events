@@ -11,6 +11,23 @@ function NewsletterRegistration() {
     const enteredEmail = emailInputRef.current.value;
 
     // TODO: Add new Email - POST
+    fetch("/api/newsletter", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        email: enteredEmail,
+      }),
+    })
+      .then((res) => res.json())
+      .then(({ message }) => {
+        // TODO: Show the message to the user
+        console.log(message);
+      }).catch(err => {
+        // TODO: handle error
+        console.log(err)
+      })
   };
 
   return (
