@@ -1,5 +1,5 @@
 import { useRef } from "react";
-
+import { toast } from "react-toastify";
 import styles from "./newsletter-registration.module.css";
 
 function NewsletterRegistration() {
@@ -10,7 +10,8 @@ function NewsletterRegistration() {
 
     const enteredEmail = emailInputRef.current.value;
 
-    // TODO: Add new Email - POST
+    const toastId = toast.loading("Register your email...");
+
     fetch("/api/newsletter", {
       method: "POST",
       headers: {
@@ -21,13 +22,20 @@ function NewsletterRegistration() {
       }),
     })
       .then((res) => res.json())
-      .then(({ message }) => {
-        // TODO: Show the message to the user
-        console.log(message);
-      }).catch(err => {
-        // TODO: handle error
-        console.log(err)
+      .then(({ message, status }) => {
+        emailInputRef.current.value = "";
+
+        toast.update(toastId, {
+          render: message,
+          type:
+            status === 422 ? "warning" : status === 500 ? "error" : "success",
+          autoClose: 4000,
+          isLoading: false,
+        });
       })
+      .catch((err) => {
+        toast.error("Something went wrong please try again");
+      });
   };
 
   return (
