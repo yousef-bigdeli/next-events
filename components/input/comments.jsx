@@ -2,16 +2,25 @@ import { useEffect, useState } from "react";
 import CommentList from "./comment-list";
 import NewComment from "./new-comment";
 import styles from "./comments.module.css";
+import { toast } from "react-toastify";
 
 const Comments = ({ eventId }) => {
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState({
+    addNewComment: false,
+    getComments: true,
+  });
 
   useEffect(() => {
     if (showComments) {
       fetch(`/api/comments/${eventId}`)
         .then((res) => res.json())
-        .then((data) => setComments(data));
+        .then(({ comments }) => setComments(comments))
+        .catch((err) => toast.error("Error in load comments."))
+        .finally(() =>
+          setIsLoading((prevState) => ({ ...prevState, getComments: false }))
+        );
     }
   }, [showComments, eventId]);
 
@@ -20,6 +29,8 @@ const Comments = ({ eventId }) => {
   };
 
   const addCommentHandler = (commentData) => {
+    setIsLoading((prevState) => ({ ...prevState, addNewComment: true }));
+
     fetch(`/api/comments/${eventId}`, {
       method: "POST",
       body: JSON.stringify(commentData),
@@ -28,13 +39,15 @@ const Comments = ({ eventId }) => {
       },
     })
       .then((res) => res.json())
-      .then(({ message }) => {
-        // TODO: Show the message to the user
-        console.log(message);
+      .then(({ message, comment }) => {
+        setComments((prevComments) => [comment, ...prevComments]);
+        toast.success(message);
       })
       .catch((err) => {
-        // TODO: handle error
-        console.log(err);
+        toast.error("Something was wrong.");
+      })
+      .finally(() => {
+        setIsLoading((prevState) => ({ ...prevState, addNewComment: false }));
       });
   };
 
@@ -43,8 +56,15 @@ const Comments = ({ eventId }) => {
       <button onClick={toggleCommentsHandler}>
         {showComments ? "Hide" : "Show"} Comments
       </button>
-      {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList items={comments} />}
+      {showComments && (
+        <NewComment
+          onAddComment={addCommentHandler}
+          isLoading={isLoading.addNewComment}
+        />
+      )}
+      {showComments && (
+        <CommentList items={comments} isLoading={isLoading.getComments} />
+      )}
     </section>
   );
 };

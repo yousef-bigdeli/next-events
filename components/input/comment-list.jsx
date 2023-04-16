@@ -1,6 +1,8 @@
 import styles from "./comment-list.module.css";
 
-const CommentList = ({ items }) => {
+const CommentList = ({ items, isLoading }) => {
+  if (isLoading) return <p>Loading...</p>;
+
   return (
     <ul className={styles.comments}>
       {items.map((item) => (

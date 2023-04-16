@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import styles from "./new-comment.module.css";
+import Loading from "../ui/Loading";
 
-const NewComment = ({ onAddComment }) => {
+const NewComment = ({ onAddComment, isLoading }) => {
   const [isInvalid, setIsInvalid] = useState(false);
 
   const emailInputRef = useRef();
@@ -52,7 +53,12 @@ const NewComment = ({ onAddComment }) => {
         <textarea id="comment" rows="5" ref={commentInputRef}></textarea>
       </div>
       {isInvalid && <p>Please enter a valid email address and comment!</p>}
-      <button className={styles.btn}>Submit</button>
+
+      {isLoading ? (
+        <Loading width={30} />
+      ) : (
+        <button className={styles.btn}>Submit</button>
+      )}
     </form>
   );
 };
