@@ -6,14 +6,14 @@ export async function connectDatabase() {
 }
 
 export async function insertDocument(client, collection, document) {
-  const db = client.db("next-events");
+  const db = client.db(process.env.DBNAME);
   const result = await db.collection(collection).insertOne(document);
 
   return result;
 }
 
 export async function getDocument(client, collection, filter = {}, sort = {}) {
-  const db = client.db("next-events");
+  const db = client.db(process.env.DBNAME);
 
   const results = await db
     .collection(collection)
