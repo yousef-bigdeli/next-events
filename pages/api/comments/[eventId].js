@@ -13,7 +13,9 @@ async function handler(req, res) {
     client = await connectDatabase();
   } catch (error) {
     console.log("Connecting to the database failed!", error);
-    res.status(500).json({ message: "server error.", status: 500 });
+    res.status(500).json({
+      message: "server error. register your comment failed!",
+    });
     return;
   }
 
@@ -35,7 +37,7 @@ async function handler(req, res) {
       !text ||
       text.trim() === ""
     ) {
-      res.status(422).json({ message: "Invalid input.", status: 422 });
+      res.status(422).json({ message: "Invalid input." });
       client.close();
       return;
     }
@@ -47,11 +49,12 @@ async function handler(req, res) {
       res.status(201).json({
         message: "Successfully add new comment.",
         comment: newComment,
-        status: 201,
       });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Server error.", status: 500 });
+      console.log(error.message);
+      res.status(500).json({
+        message: "Server error. cannot register your comment",
+      });
     }
   }
 
@@ -65,10 +68,10 @@ async function handler(req, res) {
         { _id: -1 }
       );
 
-      res.status(200).json({ comments: results, status: 200 });
+      res.status(200).json({ comments: results });
     } catch (error) {
       console.log("Cannot get comments from database.", error);
-      res.status(500).json({ message: "Server error.", status: 500 });
+      res.status(500).json({ message: "Server error." });
     }
   }
 
