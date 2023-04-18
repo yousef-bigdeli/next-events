@@ -8,7 +8,7 @@ async function handler(req, res) {
     client = await connectDatabase();
   } catch (error) {
     console.log("Connecting to the database failed!", error);
-    res.status(500).json({ message: "server error.", status: 500 });
+    res.status(500).json({ message: "Server error. Sign up is failed!" });
     return;
   }
 
@@ -17,7 +17,7 @@ async function handler(req, res) {
 
     // Validation of sent email
     if (!email || !email.includes("@")) {
-      res.status(422).json({ message: "Invalid email address.", status: 422 });
+      res.status(422).json({ message: "Invalid email address." });
       client.close();
       return;
     }
@@ -25,14 +25,12 @@ async function handler(req, res) {
     try {
       await insertDocument(client, "newsletter", { email });
       res.status(201).json({
-        message: "Signed up!",
-        status: 201,
+        message: "Signed up.",
       });
     } catch (error) {
       console.error("Error insert new email. ", error);
       res.status(500).json({
-        message: "Server Error.",
-        status: 500,
+        message: "Server Error. Sign up is failed!",
       });
     }
   }

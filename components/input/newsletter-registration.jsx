@@ -1,40 +1,56 @@
 import { useRef } from "react";
-import { toast } from "react-toastify";
+import useNotificationContext from "@/store/notification-context";
 import styles from "./newsletter-registration.module.css";
 
 function NewsletterRegistration() {
+  const notificationCtx = useNotificationContext();
   const emailInputRef = useRef();
 
+  // Handle registration
   const registrationHandler = (e) => {
     e.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
 
-    const toastId = toast.loading("Register your email...");
+    notificationCtx.showNotification({
+      status: "pending",
+      title: "Signing up",
+      message: "Registering for newsletter.",
+    });
 
     fetch("/api/newsletter", {
       method: "POST",
       headers: {
-        "content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email: enteredEmail,
       }),
     })
-      .then((res) => res.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+
+        return response.json().then((data) => {
+          throw new Error(data.message || "Something went wrong!");
+        });
+      })
       .then(({ message, status }) => {
         emailInputRef.current.value = "";
 
-        toast.update(toastId, {
-          render: message,
-          type:
-            status === 422 ? "warning" : status === 500 ? "error" : "success",
-          autoClose: 4000,
-          isLoading: false,
+        notificationCtx.showNotification({
+          title: "Success",
+          message: "Successfully registered for newsletter!",
+          status: "success",
         });
       })
-      .catch((err) => {
-        toast.error("Something went wrong please try again");
+      .catch((error) => {
+        notificationCtx.showNotification({
+          title: "Error!",
+          message: error.message || "Something went wrong!",
+          status: "error",
+        });
       });
   };
 
