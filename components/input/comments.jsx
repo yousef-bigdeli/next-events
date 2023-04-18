@@ -9,7 +9,7 @@ const Comments = ({ eventId }) => {
   const [comments, setComments] = useState([]);
   const [isLoading, setIsLoading] = useState({
     addNewComment: false,
-    getComments: true,
+    fetchComments: true,
   });
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Comments = ({ eventId }) => {
         .then(({ comments }) => setComments(comments))
         .catch((err) => toast.error("Error in load comments."))
         .finally(() =>
-          setIsLoading((prevState) => ({ ...prevState, getComments: false }))
+          setIsLoading((prevState) => ({ ...prevState, fetchComments: false }))
         );
     }
   }, [showComments, eventId]);
@@ -62,9 +62,10 @@ const Comments = ({ eventId }) => {
           isLoading={isLoading.addNewComment}
         />
       )}
-      {showComments && (
-        <CommentList items={comments} isLoading={isLoading.getComments} />
+      {showComments && !isLoading.fetchComments && (
+        <CommentList items={comments} />
       )}
+      {showComments && isLoading.fetchComments && <p>Loading...</p>}
     </section>
   );
 };
